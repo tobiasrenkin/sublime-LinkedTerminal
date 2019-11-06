@@ -31,7 +31,7 @@ atexit.register(delete_fifo)
 if os.path.exists(fifo_exec_loc):
 	print("Warning: pipe "+fifo_exec_loc+" already exists. Other processes may read from it. Expect strangeness.")
 else:
-	os.mkfifo(fifo_exec_loc, 0777)
+	os.mkfifo(fifo_exec_loc, 0644)
 	print("Executing from "+fifo_exec_loc)
 
 # save original tty setting then set it to raw or cbreak mode
