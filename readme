@@ -1,9 +1,0 @@
-# Sublime Console v0.1.
-
-# What is this?
-
-This is a Sublime Text plugin that opens a terminal. The terminal is connected to a pipe, and Sublime Text (or any other application) can send commands to the terminal through the pipe.
-
-Two examples:
-* The plugin comes with a "send" command that sends text selected in a Sublime Text view to the terminal.
-* Build systems can write directly to the pipe. The file is then built in an external terminal instead of within Sublime. This is useful for interactive programs, debugging, or if you just like your external terminal better.
