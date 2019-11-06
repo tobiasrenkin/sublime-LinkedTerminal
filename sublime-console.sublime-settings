@@ -1,0 +1,6 @@
+{
+	"terminal": "terminator",
+	"shell": "bash",
+	"pipe_exec_location": "/tmp/sublime_console.fifo",
+	"allow_multiple_inst": false
+}
