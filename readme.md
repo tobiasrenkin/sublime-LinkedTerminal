@@ -1,5 +1,7 @@
 ## Sublime Console v0.1.
 
+Note: this plugin uses the python pty module and only works in Linux.
+
 ### What is Sublime Console?
 
 Sublime Console is a Sublime Text plugin that opens a terminal. The terminal is connected to a pipe, and Sublime Text (or any other application) can communicate with the terminal through the pipe.
