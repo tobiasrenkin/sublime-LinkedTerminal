@@ -1,6 +1,12 @@
 {
 	"terminal": "terminator",
 	"shell": "bash",
+	// location of named pipe created by console. Pipe is removed when console exits.
 	"pipe_exec_location": "/tmp/sublime_console.fifo",
-	"allow_multiple_inst": false
+	// open terminal in file_path. If false, terminal opens in ~
+	"launch_in_cwd": true, 
+	// allow multiple console windows. All windows read from the same pipe. Not recommended.
+	"allow_multiple_inst": false, 
+	// put focus on control window when it receives input. Requires wmctrl.
+	"raise_on_input": true 
 }

@@ -12,8 +12,9 @@ class LaunchSublimeConsoleCommand(sublime_plugin.WindowCommand):
 
 		python_cmd = " ".join([
 			"python", sublime.packages_path()+"/sublime-console/run_pty.py",
-			"--pipe_exec", settings.get("pipe_exec_location"),
-			"--shell", settings.get("shell")
+			"--pipe", settings.get("pipe_exec_location"),
+			"--shell", settings.get("shell"),
+			"--raise_on_input" if settings.get("raise_on_input")==True else ""
 			])
 		launch_cmd = " ".join([
 			settings.get("terminal"),'--title="Sublime Console"',"-x",
