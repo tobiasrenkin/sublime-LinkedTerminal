@@ -25,12 +25,10 @@ parser.add_argument('--raise_on_input',
 	help="Terminal is raised to top of window list on input."
 	)
 args = parser.parse_args()
-fifo_exec_loc = args.pipe
-print(args.raise_on_input)
 
 def delete_fifo():
-	if os.path.exists(fifo_exec_loc):
-		os.remove(fifo_exec_loc)
+	if os.path.exists(args.pipe):
+		os.remove(args.pipe)
 
 # set event handler
 def sigintHandler(signum, frame):
@@ -44,17 +42,17 @@ signal.signal(signal.SIGTERM, sigintHandler)
 atexit.register(delete_fifo)
 
 # make sure parent terminal and pty master have same dimensions; always resize on start
-mstr_h = 0
-mstr_w = 0
+pty_size_h = 0
+pty_size_w = 0
 def ensure_equal_size():
-	global mstr_h, mstr_w
-	prnt_h, prnt_w, hp, wp = struct.unpack('HHHH', fcntl.ioctl(0, termios.TIOCGWINSZ, struct.pack('HHHH', 0, 0, 0, 0)))
-	if prnt_h!=mstr_h or prnt_w!=mstr_w:
+	global pty_size_h, pty_size_w
+	parent_shell_h, parent_shell_w, hp, wp = struct.unpack('HHHH', fcntl.ioctl(0, termios.TIOCGWINSZ, struct.pack('HHHH', 0, 0, 0, 0)))
+	if parent_shell_h!=pty_size_h or parent_shell_w!=pty_size_w:
 		tiocswinsz = getattr(termios, 'TIOCSWINSZ', -2146929561)
-		size_update = struct.pack('HHHH', prnt_h, prnt_w, 0, 0)
+		size_update = struct.pack('HHHH', parent_shell_h, parent_shell_w, 0, 0)
 		fcntl.ioctl(master_fd, tiocswinsz, size_update)
-		mstr_h=prnt_h
-		mstr_w=prnt_w
+		pty_size_h=parent_shell_h
+		pty_size_w=parent_shell_w
 
 def set_focus():
 	try:
@@ -65,11 +63,11 @@ def set_focus():
 ##############################################################################
 
 # create fifo;
-if os.path.exists(fifo_exec_loc):
-	print("Warning: pipe "+fifo_exec_loc+" already exists. Other processes may read from it. Expect strangeness.")
+if os.path.exists(args.pipe):
+	print("Warning: pipe "+args.pipe+" already exists. Other processes may read from it. Expect strangeness.")
 else:
-	os.mkfifo(fifo_exec_loc, 0644)
-	print("Listening to stdin and "+fifo_exec_loc)
+	os.mkfifo(args.pipe, 0644)
+	print("Listening to stdin and "+args.pipe)
 
 # save original tty setting then set it to raw or cbreak mode
 old_tty = termios.tcgetattr(sys.stdin)
@@ -85,7 +83,7 @@ p = subprocess.Popen(args.shell,
 	universal_newlines=True)
 
 # open named pipe, forward stdin/pipe input to pty master, forward master to stdout
-fifo_fd = os.open(fifo_exec_loc, os.O_RDWR)
+fifo_fd = os.open(args.pipe, os.O_RDWR)
 last_resize_check = 0
 last_focus_set = 0
 
