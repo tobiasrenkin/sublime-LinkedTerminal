@@ -1,4 +1,4 @@
-## Sublime Console v0.1.
+## Sublime Console
 
 A plugin for Sublime Text on Linux that connects an external terminal to Sublime Text.
 
