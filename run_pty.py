@@ -36,6 +36,7 @@ def sigintHandler(signum, frame):
 	delete_fifo()
 	termios.tcsetattr(sys.stdin.fileno(), termios.TCSADRAIN, old_tty)
 	sys.exit("Closing Sublime Console.")
+	
 signal.signal(signal.SIGINT, sigintHandler)
 signal.signal(signal.SIGHUP, sigintHandler)
 signal.signal(signal.SIGTERM, sigintHandler)
@@ -64,7 +65,7 @@ def set_focus():
 
 # create fifo;
 if os.path.exists(args.pipe):
-	print("Warning: pipe "+args.pipe+" already exists. Other processes may read from it. Expect strangeness.")
+	sys.exit("Error: pipe "+args.pipe+" already exists.")
 else:
 	os.mkfifo(args.pipe, 0644)
 	print("Listening to stdin and "+args.pipe)
