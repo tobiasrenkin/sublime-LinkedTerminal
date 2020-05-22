@@ -3,7 +3,7 @@
 from __future__ import print_function
 import os, sys, select, signal, termios, fcntl, tty, pty, subprocess, atexit, argparse, struct, time
 
-print('Sublime Console v0.1.')
+print('Sublime Console v0.2.')
 
 parser = argparse.ArgumentParser(description='Sublime Console connects your terminal to Sublime Text through a named pipe.')
 parser.add_argument('--pipe', 

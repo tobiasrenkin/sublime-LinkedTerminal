@@ -50,7 +50,9 @@ class SublimeConsole():
 class SublimeConsoleLaunchCommand(sublime_plugin.WindowCommand):
 	def run(self):
 		global console
-		cwd = launch_in=self.window.extract_variables()["file_path"]
+		pd = self.window.extract_variables().get("project_path", None)
+		cwd = self.window.extract_variables().get("file_path", None)
+		path = pd if pd else cwd if cwd else "~"
 		if not(console):
 			settings = sublime.load_settings("sublime-console.sublime-settings")
 			console = SublimeConsole(settings)
@@ -65,12 +67,14 @@ class SublimeConsoleSendCommand(sublime_plugin.TextCommand):
 		code = []
 		for region in selection:
 			code.append(self.view.substr(region).rstrip())
-		
+		# TODO: remove excessive indent for python snippets to run
+
 		console.send("\n".join(code) + "\n")
 		
 class SublimeConsoleExec(sublime_plugin.WindowCommand):
 	def run(self, cmd):
 		global console
+
 		console.send(cmd)
 		
 
