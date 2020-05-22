@@ -7,10 +7,10 @@ console = None
 
 class SublimeConsole():
 	def __init__(self, settings):
-		self.pipe_no = randrange(100000)
+		self.pipe_no = randrange(1000000)
 		self.pipe_location = "/tmp/sublime_console_" + str(self.pipe_no)
-		self.p = None
 		self.settings = settings
+		self.p = None
 
 	def send(self, cmd):
 		try:
@@ -20,27 +20,20 @@ class SublimeConsole():
 			print("Error: Can't write to pipe at", self.pipe_location)
 
 	def isalive(self):
-		#open_consoles = int(check_output(['wmctrl -l | grep "Sublime Console {0}" | wc -l'.format(self.pipe_no)], shell=True).strip())
 		if self.p == None:
 			return False
 		else:
-			response = self.p.poll()
-			print("response", response)
-			if response == None:
+			if self.p.poll() == None:
 				return True
 			else:
 				return False
 
-	def launch(self):
+	def launch(self, path):
 		if self.isalive():
 			subprocess.Popen('wmctrl -a "Sublime Console {0}"'.format(self.pipe_no), shell=True)
-			print("Console is alive")
+
 		else:
-			if self.settings.get("launch_in_cwd"):
-				#launch_in=self.window.extract_variables()["file_path"]
-				launch_in = "~"
-			else:
-				launch_in = "~"
+			launch_in = path if self.settings.get("launch_in_cwd") else "~"
 			python_cmd = " ".join([
 				"python", sublime.packages_path()+"/sublime-console/run_pty.py",
 				"--pipe", self.pipe_location,
@@ -53,15 +46,15 @@ class SublimeConsole():
 				'"cd '+launch_in+'; '+python_cmd+'"'
 			])
 			self.p = subprocess.Popen(launch_cmd, shell=True)
-			print(self.p.poll())
 
 class SublimeConsoleLaunchCommand(sublime_plugin.WindowCommand):
 	def run(self):
 		global console
+		cwd = launch_in=self.window.extract_variables()["file_path"]
 		if not(console):
 			settings = sublime.load_settings("sublime-console.sublime-settings")
 			console = SublimeConsole(settings)
-		console.launch()
+		console.launch(cwd)
 
 class SublimeConsoleSendCommand(sublime_plugin.TextCommand):
 	def run(self, edit):
