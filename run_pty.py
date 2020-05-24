@@ -24,6 +24,11 @@ parser.add_argument('--raise_on_input',
 	dest="raise_on_input", 
 	help="Terminal is raised to top of window list on input."
 	)
+#parser.add_argument('--move_to_secondary_display', 
+#	action="store_true", 
+#	dest="move_to_secondary_display", 
+#	help="move_to_secondary_display."
+#	)
 args = parser.parse_args()
 
 def delete_fifo():
@@ -41,6 +46,16 @@ signal.signal(signal.SIGINT, sigintHandler)
 signal.signal(signal.SIGHUP, sigintHandler)
 signal.signal(signal.SIGTERM, sigintHandler)
 atexit.register(delete_fifo)
+
+# move to secondary monitor if two monitors exist
+#if args.move_to_secondary_display:
+#	secondary_display = subprocess.check_output(["xrandr | grep \\ connected | grep -v primary"], shell=True).split()
+#	if len(secondary_display)>0:
+#		disp_id = secondary_display[0]
+#		disp_dim = secondary_display[2].split(b"+")
+#		subprocess.Popen(['wmctrl -r "Sublime Console" -b remove,maximized_vert,maximized_horz'], shell=True)
+#		subprocess.Popen(['wmctrl -r "Sublime Console" -e "{0},{1},{2},{3},{4}"'.format(0, 1900,100,900,500)], shell=True)
+#		subprocess.Popen(['wmctrl -r "Sublime Console" -b add, maximized_vert,maximized_horz'])
 
 # make sure parent terminal and pty master have same dimensions; always resize on start
 pty_size_h = 0

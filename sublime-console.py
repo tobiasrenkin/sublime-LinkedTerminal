@@ -2,7 +2,7 @@ import sublime, sublime_plugin
 import os, sys
 import subprocess
 from random import randrange
-
+import time
 console = None
 
 class SublimeConsole():
@@ -47,6 +47,7 @@ class SublimeConsole():
 			])
 			self.p = subprocess.Popen(launch_cmd, shell=True)
 
+						
 class SublimeConsoleLaunchCommand(sublime_plugin.WindowCommand):
 	def run(self):
 		global console
