@@ -4,9 +4,9 @@ Sublime Console is a plugin for Sublime Text on Linux that connects an external 
 
 In contrast to some existing solutions that rely on automated copy and paste functionality, Sublime Control uses pipes for communication between Sublime Text and the terminal. It does not require any external packages for it's core functionality.
 
-
 ### How to use it
-* Open a shell (could be a bash, a python shell, etc.) in the terminal and bind "sublime_console_send" to a hotkey to send snippets of code to the terminal.
+* Launch Sublime Console from within Sublime Text using "sublime_console_launch".
+* Send snippets of code to the terminal using "sublime_console_send". The code will run in the shell open in the terminal (per default this is bash, but you can open a Python shell, etc.)
 * Use "sublime_console_exec" as a target in build systems to run build commands in the terminal.
 
 ### Settings
