@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 import sublime, sublime_plugin
 import os, sys
 import subprocess
@@ -23,10 +25,8 @@ class SublimeConsole():
 		if self.p == None:
 			return False
 		else:
-			if self.p.poll() == None:
-				return True
-			else:
-				return False
+			return (self.p.poll() == None)
+
 
 	def launch(self, path):
 		if self.isalive():
@@ -38,7 +38,7 @@ class SublimeConsole():
 				"python", sublime.packages_path()+"/sublime-console/run_pty.py",
 				"--pipe", self.pipe_location,
 				"--shell", self.settings.get("shell"),
-				"--raise_on_input" if self.settings.get("raise_on_input")==True else ""
+				"--raise_on_input" if self.settings.get("raise_on_input", False) else ""
 			])
 			launch_cmd = " ".join([
 				self.settings.get("terminal"),'--title="Sublime Console {0}"'.format(self.pipe_no),"-x",
@@ -57,7 +57,7 @@ class SublimeConsoleLaunchCommand(sublime_plugin.WindowCommand):
 		if not(console):
 			settings = sublime.load_settings("sublime-console.sublime-settings")
 			console = SublimeConsole(settings)
-		console.launch(cwd)
+		console.launch(path)
 
 class SublimeConsoleSendCommand(sublime_plugin.TextCommand):
 	def run(self, edit):
@@ -76,6 +76,6 @@ class SublimeConsoleExec(sublime_plugin.WindowCommand):
 	def run(self, cmd):
 		global console
 
-		console.send(cmd)
+		console.send(cmd + "\n")
 		
 

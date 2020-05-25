@@ -91,7 +91,7 @@ tty.setraw(sys.stdin.fileno())
 
 # open pty and bash subprocess; connect all pipes of bash subprocess to slave half of pty.
 master_fd, slave_fd = pty.openpty()
-p = subprocess.Popen(args.shell,
+p = subprocess.Popen([args.shell,"-i"],
 	preexec_fn=os.setsid,
 	stdin=slave_fd,
 	stdout=slave_fd,

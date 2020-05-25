@@ -1,14 +1,13 @@
 ## Sublime Console v0.2.
 
-A plugin for Sublime Text on Linux that connects an external terminal to Sublime Text.
+Sublime Console is a plugin for Sublime Text on Linux that connects an external terminal to Sublime Text. The plugin  comes with a build target that will execute build commands in the terminal and a "send" command that sends snippets of code to the terminal.
 
-### What does the plugin do?
+In contrast to some existing solutions that rely on automated copy and paste functionality, Sublime Control uses pipes for communication between Sublime Text and the terminal. It does not require any external packages for it's core functionality.
 
-Sublime Console is a Sublime Text plugin that opens a terminal. The terminal is connected to a named pipe and can receive input from both the system stdin and the pipe. Sublime Text (or any other application) can write to the pipe to run build commands etc.
 
-### Why is this useful?
-* The plugin comes with a "sublime_console_send" command. This command sends text selected in a Sublime Text view to the terminal, and the text is then interpreted by the shell (or whatever other program is open in the terminal). 
-* The plugin comes with a sublime text build target that can be used for build commands that run in the Terminal instead of within Sublime Text. This is useful for interactive programs, debugging, or if you just like your external terminal.
+### How to use it
+* Open a shell (could be a bash, a python shell, etc.) in the terminal and bind "sublime_console_send" to a hotkey to send snippets of code to the terminal.
+* Use "sublime_console_exec" as a target in build systems to run build commands in the terminal.
 
 ### Settings
 Default settings are in sublime-console.sublime-settings.
@@ -18,7 +17,7 @@ Default key bindings are in sublime-console.sublime-keymap.
 
 ### Example build system
 
-This is an example of a build system that runs pdflatex in an open Sublime Console:
+This is an example of a build system that runs pdflatex in an open Sublime Console and then opens the pdf in Xreader:
 
 ```JSON
 {
