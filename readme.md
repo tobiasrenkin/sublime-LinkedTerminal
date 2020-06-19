@@ -1,4 +1,4 @@
-## Sublime Console v0.2.
+## Sublime Console
 
 Sublime Console is a plugin for Sublime Text on Linux that connects an external terminal to Sublime Text. The plugin  comes with a build target that will execute build commands in the terminal and a "send" command that sends snippets of code to the terminal.
 
