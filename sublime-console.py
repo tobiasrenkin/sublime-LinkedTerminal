@@ -26,26 +26,6 @@ class SublimeConsole():
 			return False
 		else:
 			return (self.p.poll() == None)
-
-
-	def launch(self, path):
-		if self.isalive():
-			subprocess.Popen('wmctrl -a "Sublime Console {0}"'.format(self.pipe_no), shell=True)
-
-		else:
-			launch_in = path if self.settings.get("launch_in_cwd") else "~"
-			python_cmd = " ".join([
-				"python", sublime.packages_path()+"/sublime-console/run_pty.py",
-				"--pipe", self.pipe_location,
-				"--shell", self.settings.get("shell"),
-				"--raise_on_input" if self.settings.get("raise_on_input", False) else ""
-			])
-			launch_cmd = " ".join([
-				self.settings.get("terminal"),'--title="Sublime Console {0}"'.format(self.pipe_no),"-x",
-				self.settings.get("shell"),"-c",
-				'"cd '+launch_in+'; '+python_cmd+'"'
-			])
-			self.p = subprocess.Popen(launch_cmd, shell=True)
 						
 class SublimeConsoleLaunchCommand(sublime_plugin.WindowCommand):
 	def run(self):
