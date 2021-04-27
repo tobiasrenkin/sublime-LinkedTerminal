@@ -1,6 +1,6 @@
 {
-	"terminal": "terminator",
-	"shell": "bash",
+	"terminal": "xfce4-terminal",
+	"shell": "zsh",
 	// location of named pipe created by console. Pipe is removed when console exits.
 	"pipe_exec_location": "/tmp/sublime_console.fifo",
 	// open terminal in file_path. If false, terminal opens in ~
@@ -8,5 +8,5 @@
 	// allow multiple console windows. All windows read from the same pipe. Not recommended.
 	"allow_multiple_inst": false, 
 	// put focus on control window when it receives input. Requires wmctrl.
-	"raise_on_input": true 
+	"raise_on_input": true
 }

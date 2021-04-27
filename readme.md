@@ -1,14 +1,13 @@
-## Sublime Console v0.1.
+## Sublime Console v0.2.
 
-A plugin for Sublime Text on Linux that connects an external terminal to Sublime Text.
+Sublime Console is a plugin for Sublime Text on Linux that connects an external terminal to Sublime Text. The plugin  comes with a build target that will execute build commands in the terminal and a "send" command that sends snippets of code to the terminal.
 
-### What does the plugin do?
+In contrast to some existing solutions that rely on automated copy and paste functionality, Sublime Control uses pipes for communication between Sublime Text and the terminal. It does not require any external packages for it's core functionality.
 
-Sublime Console is a Sublime Text plugin that opens a terminal. The terminal is connected to a named pipe. It can receive input from both the system stdin and the pipe. Sublime Text (or any other application) can communicate with the terminal through the pipe.
-
-### Why is this useful?
-* The plugin comes with a built-in "send" command. The send command sends text selected in a Sublime Text view to the terminal and the text is then interpreted by the shell (or whatever other program is open in the terminal).
-* You can write build systems that send build commands directly to the pipe. The build command then runs in the external terminal instead of within Sublime. This is useful for interactive programs, debugging, or if you just like your external terminal.
+### How to use it
+* Launch Sublime Console from within Sublime Text using "sublime_console_launch".
+* Send snippets of code to the terminal using "sublime_console_send". The code will run in the shell open in the terminal (per default this is bash, but you can open a Python shell, etc.)
+* Use "sublime_console_exec" as a target in build systems to run build commands in the terminal.
 
 ### Settings
 Default settings are in sublime-console.sublime-settings.
@@ -18,12 +17,12 @@ Default key bindings are in sublime-console.sublime-keymap.
 
 ### Example build system
 
-This is an example for a build system that runs latexmk in an open Sublime Console:
+This is an example of a build system that runs pdflatex in an open Sublime Console and then opens the pdf in Xreader:
 
 ```JSON
 {
 	"selector": "text.tex.latex",
 	"file_patterns": "*.tex",
-	"shell": true,
-	"shell_cmd": "echo \"latexmk -cd -pdf -quiet $file\">/tmp/sublime_console.fifo"
+	"cmd": "cd $file_path; pdflatex $file; nohup xreader $file_path/$file_base_name.pdf>/dev/null 2>&1 &",
+	"target": "sublime_console_exec"
 }

@@ -3,27 +3,13 @@
 from __future__ import print_function
 import os, sys, select, signal, termios, fcntl, tty, pty, subprocess, atexit, argparse, struct, time
 
-print('Sublime Console v0.1.')
+print('Sublime Console')
 
 parser = argparse.ArgumentParser(description='Sublime Console connects your terminal to Sublime Text through a named pipe.')
-parser.add_argument('--pipe', 
-	default="/tmp/sublime_console.fifo", 
-	action="store", 
-	dest="pipe", 
-	help="Create pipe at this location."
-	)
-parser.add_argument('--shell', 
-	default="bash", 
-	action="store", 
-	dest="shell", 
-	choices=["bash", "sh", "zsh", "fish"], 
-	help="Shell to run."
-	)
-parser.add_argument('--raise_on_input', 
-	action="store_true", 
-	dest="raise_on_input", 
-	help="Terminal is raised to top of window list on input."
-	)
+parser.add_argument('--pipe', default="/tmp/sublime_console.fifo", action="store", dest="pipe", help="Create pipe at this location.")
+parser.add_argument('--shell', default="bash", action="store", dest="shell", choices=["bash", "sh", "zsh", "fish"], help="Shell to run.")
+parser.add_argument('--raise_on_input', action="store_true", dest="raise_on_input", help="Terminal is raised to top of window list on input.")
+#parser.add_argument('--move_to_secondary_display', action="store_true", dest="move_to_secondary_display", help="move_to_secondary_display.")
 args = parser.parse_args()
 
 def delete_fifo():
@@ -41,6 +27,16 @@ signal.signal(signal.SIGINT, sigintHandler)
 signal.signal(signal.SIGHUP, sigintHandler)
 signal.signal(signal.SIGTERM, sigintHandler)
 atexit.register(delete_fifo)
+
+# move to secondary monitor if two monitors exist
+#if args.move_to_secondary_display:
+#	secondary_display = subprocess.check_output(["xrandr | grep \\ connected | grep -v primary"], shell=True).split()
+#	if len(secondary_display)>0:
+#		disp_id = secondary_display[0]
+#		disp_dim = secondary_display[2].split(b"+")
+#		subprocess.Popen(['wmctrl -r "Sublime Console" -b remove,maximized_vert,maximized_horz'], shell=True)
+#		subprocess.Popen(['wmctrl -r "Sublime Console" -e "{0},{1},{2},{3},{4}"'.format(0, 1900,100,900,500)], shell=True)
+#		subprocess.Popen(['wmctrl -r "Sublime Console" -b add, maximized_vert,maximized_horz'])
 
 # make sure parent terminal and pty master have same dimensions; always resize on start
 pty_size_h = 0
@@ -74,19 +70,19 @@ else:
 old_tty = termios.tcgetattr(sys.stdin)
 tty.setraw(sys.stdin.fileno())
 
-# open pty and bash subprocess; connect all pipes of bash subprocess to slave half of pty.
+# open pty and shell subprocess; connect all pipes of shell subprocess to slave half of pty.
 master_fd, slave_fd = pty.openpty()
-p = subprocess.Popen(args.shell,
-	preexec_fn=os.setsid,
-	stdin=slave_fd,
-	stdout=slave_fd,
-	stderr=slave_fd,
-	universal_newlines=True)
+p = subprocess.Popen([args.shell,"-i"], preexec_fn=os.setsid, stdin=slave_fd, stdout=slave_fd, stderr=slave_fd,	universal_newlines=True)
 
 # open named pipe, forward stdin/pipe input to pty master, forward master to stdout
 fifo_fd = os.open(args.pipe, os.O_RDWR)
 last_resize_check = 0
 last_focus_set = 0
+
+# select loop: poll sys.stdin, master_fd and fifo pipe
+# if stdin or fifo has things to read, read
+# then write to pty master
+# if master has output, write to sys.stdout
 
 while p.poll() is None:
 	try:
