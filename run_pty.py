@@ -3,10 +3,10 @@
 from __future__ import print_function
 import os, sys, select, signal, termios, fcntl, tty, pty, subprocess, atexit, argparse, struct, time
 
-print('Sublime Console')
+print('Sublime LinkedTerminal')
 
-parser = argparse.ArgumentParser(description='Sublime Console connects your terminal to Sublime Text through a named pipe.')
-parser.add_argument('--pipe', default="/tmp/sublime_console.fifo", action="store", dest="pipe", help="Create pipe at this location.")
+parser = argparse.ArgumentParser(description='Sublime LinkedTerminal connects your terminal to Sublime Text through a named pipe.')
+parser.add_argument('--pipe', default="/tmp/sublime_linkedterminal.fifo", action="store", dest="pipe", help="Create pipe at this location.")
 parser.add_argument('--shell', default="bash", action="store", dest="shell", choices=["bash", "sh", "zsh", "fish"], help="Shell to run.")
 parser.add_argument('--raise_on_input', action="store_true", dest="raise_on_input", help="Terminal is raised to top of window list on input.")
 #parser.add_argument('--move_to_secondary_display', action="store_true", dest="move_to_secondary_display", help="move_to_secondary_display.")
@@ -21,7 +21,7 @@ def sigintHandler(signum, frame):
 	os.close(fifo_fd)
 	delete_fifo()
 	termios.tcsetattr(sys.stdin.fileno(), termios.TCSADRAIN, old_tty)
-	sys.exit("Closing Sublime Console.")
+	sys.exit("Closing LinkedTerminal.")
 	
 signal.signal(signal.SIGINT, sigintHandler)
 signal.signal(signal.SIGHUP, sigintHandler)
@@ -53,7 +53,7 @@ def ensure_equal_size():
 
 def set_focus():
 	try:
-		subprocess.Popen('wmctrl -a "Sublime Console"', shell=True)
+		subprocess.Popen('wmctrl -a "Sublime LinkedTerminal"', shell=True)
 	except:
 		pass
 

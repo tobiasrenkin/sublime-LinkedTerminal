@@ -1,0 +1,14 @@
+{
+	// terminal command
+	"terminal": "xfce4-terminal",
+	// which shell to run
+	"shell": "zsh",
+	// location of named pipe created by console. Pipe is removed when console exits.
+	"pipe_exec_location": "/tmp/linkedterminal.fifo",
+	// open terminal in file_path. If false, terminal opens in ~
+	"launch_in_cwd": true, 
+	// allow multiple console windows. All windows read from the same pipe. Not recommended.
+	"allow_multiple_inst": false, 
+	// put focus on control window when it receives input. Requires wmctrl.
+	"raise_on_input": true
+}
