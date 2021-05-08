@@ -1,4 +1,0 @@
-[
-	{ "keys": ["ctrl+d"] , "command":"sublime_console_send"},
-	{ "keys": ["ctrl+keypad0"] , "command":"sublime_console_launch"}
-]
