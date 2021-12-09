@@ -25,7 +25,7 @@ class LinkedTerminal():
 		if self.p == None:
 			return False
 		else:
-			return (self.p.poll() == None)
+			return (self.p.poll()==None)
 
 
 	def launch(self, path):
@@ -33,6 +33,7 @@ class LinkedTerminal():
 			subprocess.Popen('wmctrl -a "Sublime LinkedTerminal {0}"'.format(self.pipe_no), shell=True)
 
 		else:
+			print(path)
 			launch_in = path if self.settings.get("launch_in_cwd") else "~"
 			python_cmd = " ".join([
 				"python", sublime.packages_path()+"/linkedterminal/run_pty.py",
@@ -53,6 +54,7 @@ class LinkedTerminalLaunchCommand(sublime_plugin.WindowCommand):
 		pd = self.window.extract_variables().get("project_path", None)
 		cwd = self.window.extract_variables().get("file_path", None)
 		path = pd if pd else cwd if cwd else "~"
+		path = path.replace(" ", "\\ ")
 		if not(terminal):
 			settings = sublime.load_settings("linkedterminal.sublime-settings")
 			terminal = LinkedTerminal(settings)
